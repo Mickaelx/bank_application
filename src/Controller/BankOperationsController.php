@@ -23,6 +23,12 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormTypeInterface;
 
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\HttpFoundation\Response;
+
 use App\Entity\Operations;
 use App\Repository\OperationsRepository;
 use Symfony\Flex\Unpack\Operation;
@@ -42,7 +48,7 @@ class BankOperationsController extends AbstractController
     /**
      * @Route("/operations", name="home_logged")
      */
-    public function index(OperationsRepository $repo, Request $request, Category $category = null)
+    public function index(OperationsRepository $repo, Request $request)
     {
         $data = new SearchData();
         $form = $this->createForm(SearchForm::class, $data);
@@ -251,15 +257,34 @@ class BankOperationsController extends AbstractController
     }
 
     /**
-     * @route("/statistics", name="statistics")
+     * @Route("/statistics", name="statistics")
      */
 
-    public function stats(OperationsRepository $repo) {
-        $operations = $repo->findAll();
-
-        return $this->render('bank_operations/stats.html.twig', [
-            'operations' => $operations
-        ]);
+    public function stats() {
+        return $this->render("bank_operations/stats.html.twig");
     }
 
-}
+    /**
+     * @route("/operationsJsonified", name="operationsJsonified")
+     */
+
+    public function operationsAPI(OperationsRepository $repo, Request $request)
+    {
+        $encoders = [new JsonEncoder()]; // If I need for XmlEncoder
+        $normalizers = [new ObjectNormalizer()];
+        $serializer = new Serializer($normalizers, $encoders);
+
+
+        $data = new SearchData();
+
+        $operations = $repo->findSearch($data, $this->getUser());
+
+        $operationJson = $serializer->serialize($operations, 'json', [
+            'circular_reference_handler' => function ($object) {
+                return $object->getId();
+            }
+        ]);
+
+        return new Response($operationJson, 200, ['Content-Type' => 'application/json']);
+        }
+    }

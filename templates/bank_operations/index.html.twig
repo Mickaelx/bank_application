@@ -23,7 +23,7 @@
                 {% for operation in operations %}
                     <a class="nav-link p-0" href="{{ path('operation_show', {'id': operation.id}) }}">
                         <div class="date text-muted small pb-2 ">
-                            <div class="operation_date">{{ operation.date | date('d/m/Y') }}</div>
+                            <div id="operation__date"class="operation_date">{{ operation.date | date('d/m/Y') }}</div>
                         </div>
 
                         <div class="row bg-dark shadow-sm text-white p-3 rounded">
@@ -33,8 +33,8 @@
                             <div class="col">
                                 <div class="operation_content">{{ operation.content }}</div>
                                 <div class="d-flex justify-content-between">
-                                    <div class="operation_category text-muted">{{ operation.category.title }}</div>
-                                    <div class="operation_montant font-weight-bold">${{ operation.amount }}</div>
+                                    <div id="operation__title" class="operation_category text-muted">{{ operation.category.title }}</div>
+                                    <div id="operation__amount" class="operation_montant font-weight-bold">${{ operation.amount }}</div>
                                 </div>
                             </div>
                         </div>

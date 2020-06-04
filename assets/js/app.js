@@ -17,17 +17,42 @@ document.addEventListener("DOMContentLoaded", function() {
 
 });
 
-window.onload = function() {
+function getData() {
+    let operations = [];
+    let request = new XMLHttpRequest();
+    request.open('GET', 'http://127.0.0.1:8000/operationsJsonified', false);
+    request.onload = function () {
+        if (this.status == 200) {
+            operations = JSON.parse(this.responseText);
+        }
+    };
+    request.send();
+    return operations;
+}
+
+let data = getData();
+
+
+
+
+    for(let i = 0; i < data.length; i++) {
+        var amount = [data[i].amount];
+        var content = data[i].content;
+    }
+
+
+
     var ctx = document.getElementById('graph1').getContext('2d');
 
     var graph1 = new Chart(ctx, {
+        type: 'bar',
         data: {
-            labels: operation.date,
+            labels: content,
             datasets: [
                 {
                     label: "D",
                     backgroundColor: 'red',
-                    data: operation
+                    data: amount
                 }
             ]
         },
@@ -36,23 +61,4 @@ window.onload = function() {
         }
     });
 
-
-
-    $.ajax({
-        method: 'GET',
-        url: 'Operations.php',
-        dataType: 'json',
-        success: function(response) {
-            if (!response.length) {
-                console.log('une erreur est survenue');
-                return false;
-            }
-            getChart(response);
-        },
-        error: function() {
-            console.log('une erreur est survenue');
-            return false;
-        }
-    });
-}
 
