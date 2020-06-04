@@ -4,13 +4,16 @@ namespace App\Controller;
 
 use App\Data\SearchData;
 use App\Entity\Category;
+use App\Entity\PayementMethod;
 use App\Entity\PropertySearch;
 use App\Entity\User;
 use App\Form\CategoryFormType;
 use App\Form\OperationFormType;
+use App\Form\PayementMethodFormType;
 use App\Form\PropertySearchType;
 use App\Form\SearchForm;
 use App\Repository\CategoryRepository;
+use App\Repository\PayementMethodRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Mime\Message;
 use Symfony\Component\Routing\Annotation\Route;
@@ -177,7 +180,8 @@ class BankOperationsController extends AbstractController
 
         return $this->render('bank_operations/category.html.twig', [
             'formCategory' => $form->createView(),
-            'category' => $category
+            'category' => $category,
+            'editMode' => $category->getId() !== null
         ]);
     }
 
@@ -188,6 +192,62 @@ class BankOperationsController extends AbstractController
         $entityManager->remove($category);
         $entityManager->flush();
         return $this->redirectToRoute('category_show');
+    }
+
+    /**
+     * @Route("/payementMethod", name="payementMethod_show")
+     */
+
+    public function showPayementMethod(PayementMethodRepository $repository, Request $request) {
+
+        $payementMethod = $repository->findAll();
+
+        return $this->render("bank_operations/showPayementMethod.html.twig", [
+            'payementMethod' => $payementMethod
+        ]);
+    }
+
+    /**
+     * @Route("/payementMethod/new", name="payementMethod_add")
+     * @Route("/payementMethod/{id}/edit", name="payementMethod_edit")
+     */
+
+    public function addPayementMethod(PayementMethod $payementMethod = null, Request $request, EntityManagerInterface $entityManager) {
+
+        if($this->getUser() == null) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        if(!$payementMethod) {
+            $payementMethod = new PayementMethod();
+        }
+
+        $form = $this->createForm(PayementMethodFormType::class, $payementMethod);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($payementMethod);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Well done! Successfully added "'. $payementMethod->getNamePayement() .'" to your categories');
+            return $this->redirectToRoute('payementMethod_show');
+        }
+
+        return $this->render('bank_operations/payementMethod.html.twig', [
+            'formPayementMethod' => $form->createView(),
+            'payementMethod' => $payementMethod,
+            'editMode' => $payementMethod->getId() !== null
+        ]);
+    }
+
+    /**
+     * @Route("/payementMethod/{id}/delete", name="payementMethod_delete")
+     */
+
+    public function deletePayementMethod(PayementMethod $payementMethod, EntityManagerInterface $entityManager) {
+        $entityManager->remove($payementMethod);
+        $entityManager->flush();
+        return $this->redirectToRoute('payementMethod_show');
     }
 
     /**

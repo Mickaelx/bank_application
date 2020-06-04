@@ -20,7 +20,13 @@
         {{ form_start(formCategory) }}
             {{ form_row(formCategory.title) }}
             {{ form_row(formCategory.image) }}
-            <button type="submit" class="btn btn-success w-100">Add category</button>
+            <button type="submit" class="btn btn-success w-100">
+                {% if editMode %}
+                    Edit category
+                {% else %}
+                    Add category
+                {% endif %}
+            </button>
         {{ form_end(formCategory) }}
 
     </section>

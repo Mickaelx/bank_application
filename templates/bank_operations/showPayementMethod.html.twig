@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="payementMethod pt-2">
+        <a href="{{ path("home_logged") }}"><i class="lni lni-shift-left"></i> Return to homepage</a>
+        <div class="jumbotron mt-4">
+            <h2 class="h2">Manage your payement method here</h2>
+            <p class="lead">Quickly, you can edit or delete any payement method</p>
+            <a class="btn btn-primary d-flex align-items-center justify-content-center w-50" href="{{ path("payementMethod_add") }}"><i class="lni lni-plus mr-2"></i> Add category</a>
+        </div>
+        <div class="pb-5 px-3 row">
+            {% for payementMethods in payementMethod %}
+                <div class="category mx-auto shadow-sm border jumbotron rounded col-4 ">
+                        <div class="category_image mr-2">{{ payementMethods.namePayement }}</div>
+
+                    <a class="btn btn-outline-primary mt-4 d-flex align-items-center justify-content-center" href="{{ path('payementMethod_edit', {'id': payementMethods.id}) }}"><i class="lni lni-pencil-alt mr-2"></i> Edit</a>
+                    <a class="btn btn-danger mt-4 d-flex align-items-center justify-content-center" href="{{ path('payementMethod_delete', {'id': payementMethods.id}) }}"><i class="lni lni-cross-circle mr-2"></i> Delete</a>
+                </div>
+
+            {% endfor %}
+
+        </div>
+    </div>
+{% endblock %}
