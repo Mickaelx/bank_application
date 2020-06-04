@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="categories pt-2">
+        <a href="{{ path("home_logged") }}"><i class="lni lni-shift-left"></i> Return to homepage</a>
+        <div class="jumbotron mt-4">
+            <h2 class="h2">Manage your categories here</h2>
+            <p class="lead">Quickly, you can edit or delete any category</p>
+            <a class="btn btn-primary d-flex align-items-center justify-content-center w-50" href="{{ path("category_add") }}"><i class="lni lni-plus mr-2"></i> Add category</a>
+        </div>
+        <div class="pb-5 px-3 row">
+            {% for categories in category %}
+                    <div class="category mx-auto shadow-sm border jumbotron rounded col-6 ">
+                        <div class="d-flex align-items-center">
+                            <div class="category_image mr-2">{{ categories.image | raw }}</div>
+                            <h3 class="category_title">{{ categories.title }}</h3>
+                        </div>
+                        <a class="btn btn-outline-primary mt-4 d-flex align-items-center justify-content-center" href="{{ path('category_edit', {'id': categories.id}) }}"><i class="lni lni-pencil-alt mr-2"></i> Edit</a>
+                        <a class="btn btn-danger mt-4 d-flex align-items-center justify-content-center" href="{{ path('category_delete', {'id': categories.id}) }}"><i class="lni lni-cross-circle mr-2"></i> Delete</a>
+                    </div>
+
+            {% endfor %}
+
+        </div>
+    </div>
+{% endblock %}

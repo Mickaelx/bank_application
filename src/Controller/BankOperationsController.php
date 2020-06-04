@@ -10,6 +10,7 @@ use App\Form\CategoryFormType;
 use App\Form\OperationFormType;
 use App\Form\PropertySearchType;
 use App\Form\SearchForm;
+use App\Repository\CategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Mime\Message;
 use Symfony\Component\Routing\Annotation\Route;
@@ -38,7 +39,7 @@ class BankOperationsController extends AbstractController
     /**
      * @Route("/operations", name="home_logged")
      */
-    public function index(OperationsRepository $repo, Request $request)
+    public function index(OperationsRepository $repo, Request $request, Category $category = null)
     {
         $data = new SearchData();
         $form = $this->createForm(SearchForm::class, $data);
@@ -58,7 +59,7 @@ class BankOperationsController extends AbstractController
         return $this->render('bank_operations/index.html.twig', [
             'operations' => $operations,
             'totalSumAmount' => $totalSumAmount,
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ]);
 
     }
@@ -133,8 +134,22 @@ class BankOperationsController extends AbstractController
     }
 
     /**
+     * @route("/category", name="category_show")
+     */
+
+    public function showCategory(CategoryRepository $repository, Request $request) {
+
+        $category = $repository->findAll();
+
+        return $this->render("bank_operations/showCategories.html.twig", [
+            'category' => $category
+        ]);
+    }
+
+
+    /**
      * @route("/cateogry/new", name="category_add")
-     *
+     * @Route("/category/{id}/edit", name="category_edit")
      */
 
     public function addCategory(Category $category = null, Request $request, EntityManagerInterface $entityManager) {
@@ -151,14 +166,11 @@ class BankOperationsController extends AbstractController
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()) {
-            $category->setTitle();
-            $category->setImage();
-
             $entityManager->persist($category);
             $entityManager->flush();
 
             $this->addFlash('success', 'Well done! Successfully added "'. $category->getTitle() .'" to your categories');
-            return $this->redirectToRoute('home_logged');
+            return $this->redirectToRoute('category_show');
         }
 
 
@@ -167,6 +179,15 @@ class BankOperationsController extends AbstractController
             'formCategory' => $form->createView(),
             'category' => $category
         ]);
+    }
+
+    /**
+     * @Route("/category/{id}/delete", name="category_delete")
+     */
+    public function deleteCategory(Category $category, EntityManagerInterface $entityManager) {
+        $entityManager->remove($category);
+        $entityManager->flush();
+        return $this->redirectToRoute('category_show');
     }
 
     /**

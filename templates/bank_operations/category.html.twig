@@ -3,13 +3,96 @@
 {% block title %} New category | MyBankApp{% endblock %}
 
 {% form_theme formCategory 'bootstrap_4_layout.html.twig' %}
-
+{% block javascript %}
+<script>
+    function copyToClipboard() {
+        let copyText = document.getElementById("toCopy");
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); /*For mobile devices*/
+        document.execCommand("copy");
+    }
+</script>
+{% endblock %}
 {% block body %}
+
     <section class="form w-50 m-auto pt-5">
+
         {{ form_start(formCategory) }}
             {{ form_row(formCategory.title) }}
             {{ form_row(formCategory.image) }}
             <button type="submit" class="btn btn-success w-100">Add category</button>
         {{ form_end(formCategory) }}
+
     </section>
+
+    <div class="jumbotron mt-5">
+        <h2 class="h2">Icon / image usage</h2>
+        <p class="lead">We choose to use <a href="https://lineicons.com/icons/">LineIcons</a> library for icons. We suggest you do the same if you wanna keep
+        it as nice as possible. Here are some, hope it'll help!
+        </p>
+        <div class="d-flex align-items-center pt-3">
+            <i class="lni lni-ticket-alt mr-5" style="font-size: 40px!important"></i>
+            <div class="d-flex align-items-center">
+                <input type="text" class=" border bg-dark text-white rounded px-3 p-1" id="toCopy" value="&lt;i class='\lni lni-ticket-alt'\&gt;&lt;/i&gt;">
+                <button class="btn btn-outline-dark ml-3" data-toggle="tooltip" data-placement="top" title="Copy to clickboard" onClick="copyToClipboard()">Copy to clipboard</button>
+            </div>
+        </div>
+        <div class="d-flex align-items-center pt-3">
+            <i class="lni lni-mobile mr-5" style="font-size: 40px!important"></i>
+            <div class="d-flex align-items-center">
+                <input type="text" class=" border bg-dark text-white rounded px-3 p-1" id="toCopy" value="&lt;i class='\lni lni-mobile'\&gt;&lt;/i&gt;">
+                <button class="btn btn-outline-dark ml-3" data-toggle="tooltip" data-placement="top" title="Copy to clickboard" onClick="copyToClipboard()">Copy to clipboard</button>
+            </div>
+        </div>
+        <div class="d-flex align-items-center pt-3">
+            <i class="lni lni-cart mr-5" style="font-size: 40px!important"></i>
+            <div class="d-flex align-items-center">
+                <input type="text" class=" border bg-dark text-white rounded px-3 p-1" id="toCopy" value="&lt;i class='\lni lni-cart'\&gt;&lt;/i&gt;">
+                <button class="btn btn-outline-dark ml-3" data-toggle="tooltip" data-placement="top" title="Copy to clickboard" onClick="copyToClipboard()">Copy to clipboard</button>
+            </div>
+        </div>
+        <div class="d-flex align-items-center pt-3">
+            <i class="lni lni-revenue mr-5" style="font-size: 40px!important"></i>
+            <div class="d-flex align-items-center">
+                <input type="text" class=" border bg-dark text-white rounded px-3 p-1" id="toCopy" value="&lt;i class='\lni lni-revenue'\&gt;&lt;/i&gt;">
+                <button class="btn btn-outline-dark ml-3" data-toggle="tooltip" data-placement="top" title="Copy to clickboard" onClick="copyToClipboard()">Copy to clipboard</button>
+            </div>
+        </div>
+        <div class="d-flex align-items-center pt-3">
+            <i class="lni lni-shift-left mr-5" style="font-size: 40px!important"></i>
+            <div class="d-flex align-items-center">
+                <input type="text" class=" border bg-dark text-white rounded px-3 p-1" id="toCopy" value="&lt;i class='\lni lni-shift-left'\&gt;&lt;/i&gt;">
+                <button class="btn btn-outline-dark ml-3" data-toggle="tooltip" data-placement="top" title="Copy to clickboard" onClick="copyToClipboard()">Copy to clipboard</button>
+            </div>
+        </div>
+        <div class="d-flex align-items-center pt-3">
+            <i class="lni lni-coffee-cup mr-5" style="font-size: 40px!important"></i>
+            <div class="d-flex align-items-center">
+                <input type="text" class=" border bg-dark text-white rounded px-3 p-1" id="toCopy" value="&lt;i class='\lni lni-coffee-cup'\&gt;&lt;/i&gt;">
+                <button class="btn btn-outline-dark ml-3" data-toggle="tooltip" data-placement="top" title="Copy to clickboard" onClick="copyToClipboard()">Copy to clipboard</button>
+            </div>
+        </div>
+        <div class="d-flex align-items-center pt-3">
+            <i class="lni lni-add-files mr-5" style="font-size: 40px!important"></i>
+            <div class="d-flex align-items-center">
+                <input type="text" class=" border bg-dark text-white rounded px-3 p-1" id="toCopy" value="&lt;i class='\lni lni-add-files'\&gt;&lt;/i&gt;">
+                <button class="btn btn-outline-dark ml-3" data-toggle="tooltip" data-placement="top" title="Copy to clickboard" onClick="copyToClipboard()">Copy to clipboard</button>
+            </div>
+        </div>
+        <div class="d-flex align-items-center pt-3">
+            <i class="lni lni-aws mr-5" style="font-size: 40px!important"></i>
+            <div class="d-flex align-items-center">
+                <input type="text" class=" border bg-dark text-white rounded px-3 p-1" id="toCopy" value="&lt;i class='\lni lni-aws'\&gt;&lt;/i&gt;">
+                <button class="btn btn-outline-dark ml-3" data-toggle="tooltip" data-placement="top" title="Copy to clickboard" onClick="copyToClipboard()">Copy to clipboard</button>
+            </div>
+        </div>
+        <div class="d-flex align-items-center pt-3">
+            <i class="lni lni-cog mr-5" style="font-size: 40px!important"></i>
+            <div class="d-flex align-items-center">
+                <input type="text" class=" border bg-dark text-white rounded px-3 p-1" id="toCopy" value="&lt;i class='\lni lni-cog'\&gt;&lt;/i&gt;">
+                <button class="btn btn-outline-dark ml-3" data-toggle="tooltip" data-placement="top" title="Copy to clickboard" onClick="copyToClipboard()">Copy to clipboard</button>
+            </div>
+        </div>
+
+    </div>
 {% endblock %}

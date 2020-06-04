@@ -14,10 +14,7 @@ class CategoryFormType extends AbstractType
     {
         $builder
             ->add('title')
-            ->add('image', EntityType::class, [
-                'class' => Category::class,
-                'choice_label' => 'image'
-            ])
+            ->add('image')
         ;
     }
 
