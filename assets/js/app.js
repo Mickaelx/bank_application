@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function getData() {
-    let operations = [];
+    var operations = [];
     let request = new XMLHttpRequest();
     request.open('GET', 'http://127.0.0.1:8000/operationsJsonified', false);
     request.onload = function () {
@@ -36,29 +36,24 @@ let data = getData();
 
 
     for(let i = 0; i < data.length; i++) {
-        var amount = [data[i].amount];
-        var content = data[i].content;
+        let amount = data[i].amount
+        var ctx = document.getElementById('graph1').getContext('2d');
+
+        var graph1 = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [ data[i].date.timestamp ],
+                datasets: [
+                    {
+                        label: [ data[i].content ],
+                        backgroundColor: 'red',
+                        data: [amount]
+                    }
+                ]
+            },
+            options: {
+                responsive: true
+            }
+        });
     }
-
-
-
-    var ctx = document.getElementById('graph1').getContext('2d');
-
-    var graph1 = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: content,
-            datasets: [
-                {
-                    label: "D",
-                    backgroundColor: 'red',
-                    data: amount
-                }
-            ]
-        },
-        options: {
-            responsive: true
-        }
-    });
-
 
