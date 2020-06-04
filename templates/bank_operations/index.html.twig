@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Home | MyBankApp{% endblock %}
+
+{% block alert %}
+{% endblock %}
+
+
+{% block body %}
+<section class="operations  pb-0">
+
+    <div class="jumbotron text-center rounded p-3">
+        <span>current sold:</span>
+        <div class="amount-global h2">${{ totalSumAmount }}</div>
+    </div>
+
+    <div class="row">
+        <div class="col-3 border-right">
+            {% include 'bank_operations/_filter.html.twig' with {form: form} only %}
+        </div>
+
+        <div class="col-9 operation mx-auto pl-5">
+                {% for operation in operations %}
+                    <a class="nav-link p-0" href="{{ path('operation_show', {'id': operation.id}) }}">
+                        <div class="date text-muted small pb-2 ">
+                            <div class="operation_date">{{ operation.date | date('d/m/Y') }}</div>
+                        </div>
+
+                        <div class="row bg-dark shadow-sm text-white p-3 rounded">
+                            <div class="col-1 d-flex align-items-center">
+                                <div class="operation_category">{{ operation.category.image | raw }}</div>
+                            </div>
+                            <div class="col">
+                                <div class="operation_content">{{ operation.content }}</div>
+                                <div class="d-flex justify-content-between">
+                                    <div class="operation_category text-muted">{{ operation.category.title }}</div>
+                                    <div class="operation_montant font-weight-bold">${{ operation.amount }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                    </a>
+                {% endfor %}
+        </div>
+    </div>
+
+</section>
+{% endblock %}

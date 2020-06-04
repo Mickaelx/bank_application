@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="operation jumbotron">
+
+        <div class="operation_date">{{ operation.date | date('d/m/Y') }}</div>
+        <div class="operation_montant">${{ operation.amount }}</div>
+        <div class="operation_type">{{ operation.type.nameType }}</div>
+        <div class="operation_content">{{ operation.content }}</div>
+        <div class="operation_category">{{ operation.category.image | raw }}</div>
+        <div class="operation_payementMethod">{{ operation.payementMethod.namePayement }}</div>
+        <a class="btn btn-primary mt-4" href="{{ path('operation_edit', {'id': operation.id}) }}">Edit</a>
+        <a class="btn btn-danger mt-4" href="{{ path('operation_delete', {'id': operation.id}) }}">Delete</a>
+        <hr>
+
+    </div>
+{% endblock %}

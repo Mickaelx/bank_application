@@ -1,0 +1,32 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %} New operation | MyBankApp{% endblock %}
+
+{% form_theme formOperation 'bootstrap_4_layout.html.twig' %}
+
+{% block body %}
+
+    <section class="form w-50 m-auto pt-5">
+        <h1 class="text-center h2 pb-5">Add operation</h1>
+
+        {{ form_start(formOperation) }}
+
+        {{ form_row(formOperation.type) }}
+        {{ form_row(formOperation.category) }}
+        {{ form_row(formOperation.amount, {'attr': {'placeholder': 'Amount'}}) }}
+        {{ form_row(formOperation.content, {'attr': {'placeholder': 'Transaction description'}}) }}
+        {{ form_row(formOperation.payementMethod) }}
+
+        <button type="submit" class="btn btn-success w-100">
+            {% if editMode %}
+                Edit
+            {% else %}
+                Add
+            {% endif %}
+        </button>
+
+        {{ form_end(formOperation) }}
+    </section>
+
+{% endblock %}

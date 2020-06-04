@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} New category | MyBankApp{% endblock %}
+
+{% form_theme formCategory 'bootstrap_4_layout.html.twig' %}
+
+{% block body %}
+    <section class="form w-50 m-auto pt-5">
+        {{ form_start(formCategory) }}
+            {{ form_row(formCategory.title) }}
+            {{ form_row(formCategory.image) }}
+            <button type="submit" class="btn btn-success w-100">Add category</button>
+        {{ form_end(formCategory) }}
+    </section>
+{% endblock %}
