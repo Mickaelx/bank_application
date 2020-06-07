@@ -11,49 +11,88 @@ import '../css/app.css';
 // Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
 // import $ from 'jquery';
 
-document.addEventListener("DOMContentLoaded", function() {
-    var toLoad = document.querySelector("#toLoad");
-    toLoad.classList.add("loader");
 
-});
+catchData().then(response => console.log('All good, data fetched!')).catch(error => {
+    console.log(error);
+})
 
-function getData() {
-    var operations = [];
-    let request = new XMLHttpRequest();
-    request.open('GET', 'http://127.0.0.1:8000/operationsJsonified', false);
-    request.onload = function () {
-        if (this.status == 200) {
-            operations = JSON.parse(this.responseText);
+async function catchData() {
+
+    const xLabelsDate = [];
+    const yOperationsPlus = [];
+    const yOperationsMinus = [];
+    const yContent = [];
+    const yCategory = [];
+    const response = await fetch('/operationsJsonified');
+    const data = await response.json();
+    console.log(data);
+
+    data.forEach(operation => {
+        const amount = operation.amount;
+        if (operation.amount > 0) {
+            const amountPlus = operation.amount
+
+            yOperationsPlus.push(amountPlus);
+
+        } else {
+            const amountMinus = operation.amount
+            yOperationsMinus.push(amountMinus);
+
         }
-    };
-    request.send();
-    return operations;
+
+
+        const UNIXTimestamp = operation.date.timestamp;
+        date = new Date(UNIXTimestamp * 1000);
+        time = date.toDateString();
+        xLabelsDate.push(time);
+
+        const category = operation.category.title;
+        const content = operation.content;
+        yContent.push(content);
+
+
+    })
+    return {
+        yOperationsPlus,
+        yOperationsMinus,
+        xLabelsDate,
+        yCategory,
+        yContent
+    }
 }
 
-let data = getData();
+
+createChart();
+
+async function createChart() { // call en await la function qui récupère les data et attend qu'elles soient récup
+    const data = await catchData();
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const chart = new Chart(ctx, {
+        type: 'line',
 
 
+        data: {
+            labels: data.xLabelsDate,
 
 
-    for(let i = 0; i < data.length; i++) {
-        let amount = data[i].amount
-        var ctx = document.getElementById('graph1').getContext('2d');
+            datasets: [
+                {
+                    label: "Positive amount",
+                    fill: false,
+                    borderColor: 'rgba(255, 0, 0, .7)',
+                    data: data.yOperationsMinus
 
-        var graph1 = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: [ data[i].date.timestamp ],
-                datasets: [
-                    {
-                        label: [ data[i].content ],
-                        backgroundColor: 'red',
-                        data: [amount]
-                    }
-                ]
-            },
-            options: {
-                responsive: true
-            }
-        });
-    }
+                }, {
+                    label: "Positive amount",
+                    fill: false,
+                    borderColor: 'rgba(50, 205, 50, .7)',
+                    data: data.yOperationsPlus
 
+                }
+            ]
+        },
+
+
+        options: {}
+    });
+}

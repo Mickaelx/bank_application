@@ -42,32 +42,32 @@ class OperationsRepository extends ServiceEntityRepository
             ->orderBy('operations.date', 'DESC');
 
         // handle search bar
-        if(!empty($search->q)) {
+        if (!empty($search->q)) {
             $query = $query
                 ->andWhere('operations.content LIKE :q')
                 ->setParameter('q', "%{$search->q}%");
         }
 
-        if(!empty($search->type)) {
+        if (!empty($search->type)) {
             $query = $query
                 ->andWhere('type IN (:type)')
                 ->setParameter('type', $search->type);
         }
 
-        if(!empty($search->categories)) {
+        if (!empty($search->categories)) {
             $query = $query
                 //operations.category is already an ID then access table category
                 ->andWhere('category IN (:category)')
                 ->setParameter('category', $search->categories);
         }
 
-        if(!empty($search->min)) {
+        if (!empty($search->min)) {
             $query = $query
                 ->andWhere('operations.amount >= :min')
                 ->setParameter('min', $search->min)
                 ->orderBy('operations.amount', 'ASC');
         }
-        if(!empty($search->max)) {
+        if (!empty($search->max)) {
             $query = $query
                 ->andWhere('operations.amount <= :max')
                 ->setParameter('max', $search->max)
@@ -76,6 +76,21 @@ class OperationsRepository extends ServiceEntityRepository
 
         return $query->getQuery()->getResult();
     }
+    /**
+     * @return operation[]
+     */
 
-
+    public function findAllOperationsByUsers(User $user): array
+    {
+        $query = $this
+            ->createQueryBuilder('operations')
+            //operations.category is already an ID
+            ->join('operations.category', 'category')
+            ->join('operations.type', 'type')
+            ->join('operations.user', 'user')
+            ->where('operations.user = :user')
+            ->setParameter('user', $user)
+            ->orderBy('operations.date', 'DESC');
+        return $query->getQuery()->getResult();
+    }
 }

@@ -25,7 +25,11 @@ use Symfony\Component\Form\FormTypeInterface;
 
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Doctrine\Common\Annotations\AnnotationReader;
+use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
+use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -41,7 +45,8 @@ class BankOperationsController extends AbstractController
     /**
      * @Route("/", name="home_unlogged")
      */
-    public function unloggedHome(){
+    public function unloggedHome()
+    {
         return $this->render('bank_operations/unlogged_home.html.twig');
     }
 
@@ -54,13 +59,13 @@ class BankOperationsController extends AbstractController
         $form = $this->createForm(SearchForm::class, $data);
         $form->handleRequest($request);
 
-        if(!$this->getUser()) {
+        if (!$this->getUser()) {
             return $this->redirectToRoute('home_unlogged');
         }
 
         $operations = $repo->findSearch($data, $this->getUser());
 
-        $totalSumAmount = array_reduce($operations, function($amount, $operation){
+        $totalSumAmount = array_reduce($operations, function ($amount, $operation) {
             $amount += $operation->getAmount();
             return round($amount, 2);
         }, 0);
@@ -70,7 +75,6 @@ class BankOperationsController extends AbstractController
             'totalSumAmount' => $totalSumAmount,
             'form' => $form->createView(),
         ]);
-
     }
 
     /**
@@ -78,13 +82,14 @@ class BankOperationsController extends AbstractController
      * @Route("/operation/{id}/edit", name="operation_edit")
      */
 
-    public function form(Operations $operation = null, Request $request, EntityManagerInterface $entityManager) {
+    public function form(Operations $operation = null, Request $request, EntityManagerInterface $entityManager)
+    {
 
-        if($this->getUser() == null) {
+        if ($this->getUser() == null) {
             return $this->redirectToRoute('app_login');
         }
 
-        if(!$operation) {
+        if (!$operation) {
             $operation = new Operations();
         }
 
@@ -92,29 +97,29 @@ class BankOperationsController extends AbstractController
 
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()) {
-            if(!$operation->getId()) {
+        if ($form->isSubmitted() && $form->isValid()) {
+            if (!$operation->getId()) {
                 $operation->setDate(new \Datetime());
                 $user = $this->getUser();
                 $operation->setUser($user);
             }
 
-            if($operation->getType()->getId() === 535) {
+            if ($operation->getType()->getId() === 535) {
                 $amount = $operation->getAmount();
-                $amount = $amount*-1;
+                $amount = $amount * -1;
                 $operation->setAmount($amount);
             }
-            if($operation->getType()->getId() === 536){
+            if ($operation->getType()->getId() === 536) {
                 $amount = $operation->getAmount();
-                if($amount < 0){
-                    $amount = $amount*-1;
+                if ($amount < 0) {
+                    $amount = $amount * -1;
                     $operation->setAmount($amount);
                 }
             }
 
             $entityManager->persist($operation);
             $entityManager->flush();
-            $this->addFlash('success', 'Well done! Successfully added "'. $operation->getContent() .'" to your view.');
+            $this->addFlash('success', 'Well done! Successfully added "' . $operation->getContent() . '" to your view.');
             return $this->redirectToRoute('home_logged');
         }
 
@@ -127,7 +132,8 @@ class BankOperationsController extends AbstractController
     /**
      * @Route("/operation/{id}", name="operation_show")
      */
-    public function show(Operations $operation){
+    public function show(Operations $operation)
+    {
         return $this->render('bank_operations/show.html.twig', [
             'operation' => $operation
         ]);
@@ -136,7 +142,8 @@ class BankOperationsController extends AbstractController
     /**
      * @Route("/operation/{id}/delete", name="operation_delete")
      */
-    public function delete(Operations $operation, EntityManagerInterface $entityManager) {
+    public function delete(Operations $operation, EntityManagerInterface $entityManager)
+    {
         $entityManager->remove($operation);
         $entityManager->flush();
         return $this->redirectToRoute('home_logged');
@@ -146,8 +153,11 @@ class BankOperationsController extends AbstractController
      * @route("/category", name="category_show")
      */
 
-    public function showCategory(CategoryRepository $repository, Request $request) {
-
+    public function showCategory(CategoryRepository $repository, Request $request)
+    {
+        if ($this->getUser() == null) {
+            return $this->redirectToRoute('app_login');
+        }
         $category = $repository->findAll();
 
         return $this->render("bank_operations/showCategories.html.twig", [
@@ -161,24 +171,25 @@ class BankOperationsController extends AbstractController
      * @Route("/category/{id}/edit", name="category_edit")
      */
 
-    public function addCategory(Category $category = null, Request $request, EntityManagerInterface $entityManager) {
+    public function addCategory(Category $category = null, Request $request, EntityManagerInterface $entityManager)
+    {
 
-        if($this->getUser() == null) {
+        if ($this->getUser() == null) {
             return $this->redirectToRoute('app_login');
         }
 
-        if(!$category) {
+        if (!$category) {
             $category = new Category();
         }
 
         $form = $this->createForm(CategoryFormType::class, $category);
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($category);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Well done! Successfully added "'. $category->getTitle() .'" to your categories');
+            $this->addFlash('success', 'Well done! Successfully added "' . $category->getTitle() . '" to your categories');
             return $this->redirectToRoute('category_show');
         }
 
@@ -194,7 +205,8 @@ class BankOperationsController extends AbstractController
     /**
      * @Route("/category/{id}/delete", name="category_delete")
      */
-    public function deleteCategory(Category $category, EntityManagerInterface $entityManager) {
+    public function deleteCategory(Category $category, EntityManagerInterface $entityManager)
+    {
         $entityManager->remove($category);
         $entityManager->flush();
         return $this->redirectToRoute('category_show');
@@ -204,8 +216,11 @@ class BankOperationsController extends AbstractController
      * @Route("/payementMethod", name="payementMethod_show")
      */
 
-    public function showPayementMethod(PayementMethodRepository $repository, Request $request) {
-
+    public function showPayementMethod(PayementMethodRepository $repository, Request $request)
+    {
+        if ($this->getUser() == null) {
+            return $this->redirectToRoute('app_login');
+        }
         $payementMethod = $repository->findAll();
 
         return $this->render("bank_operations/showPayementMethod.html.twig", [
@@ -218,24 +233,25 @@ class BankOperationsController extends AbstractController
      * @Route("/payementMethod/{id}/edit", name="payementMethod_edit")
      */
 
-    public function addPayementMethod(PayementMethod $payementMethod = null, Request $request, EntityManagerInterface $entityManager) {
+    public function addPayementMethod(PayementMethod $payementMethod = null, Request $request, EntityManagerInterface $entityManager)
+    {
 
-        if($this->getUser() == null) {
+        if ($this->getUser() == null) {
             return $this->redirectToRoute('app_login');
         }
 
-        if(!$payementMethod) {
+        if (!$payementMethod) {
             $payementMethod = new PayementMethod();
         }
 
         $form = $this->createForm(PayementMethodFormType::class, $payementMethod);
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($payementMethod);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Well done! Successfully added "'. $payementMethod->getNamePayement() .'" to your categories');
+            $this->addFlash('success', 'Well done! Successfully added "' . $payementMethod->getNamePayement() . '" to your categories');
             return $this->redirectToRoute('payementMethod_show');
         }
 
@@ -250,7 +266,8 @@ class BankOperationsController extends AbstractController
      * @Route("/payementMethod/{id}/delete", name="payementMethod_delete")
      */
 
-    public function deletePayementMethod(PayementMethod $payementMethod, EntityManagerInterface $entityManager) {
+    public function deletePayementMethod(PayementMethod $payementMethod, EntityManagerInterface $entityManager)
+    {
         $entityManager->remove($payementMethod);
         $entityManager->flush();
         return $this->redirectToRoute('payementMethod_show');
@@ -260,7 +277,8 @@ class BankOperationsController extends AbstractController
      * @Route("/statistics", name="statistics")
      */
 
-    public function stats() {
+    public function stats()
+    {
         return $this->render("bank_operations/stats.html.twig");
     }
 
@@ -268,23 +286,22 @@ class BankOperationsController extends AbstractController
      * @route("/operationsJsonified", name="operationsJsonified")
      */
 
-    public function operationsAPI(OperationsRepository $repo, Request $request)
+    public function operationsAPI(OperationsRepository $repo)
     {
-        $encoders = [new JsonEncoder()]; // If I need for XmlEncoder
-        $normalizers = [new ObjectNormalizer()];
-        $serializer = new Serializer($normalizers, $encoders);
-
-
-        $data = new SearchData();
-
-        $operations = $repo->findSearch($data, $this->getUser());
-
-        $operationJson = $serializer->serialize($operations, 'json', [
-            'circular_reference_handler' => function ($object) {
-                return $object->getId();
-            }
-        ]);
-
-        return new Response($operationJson, 200, ['Content-Type' => 'application/json']);
+        if ($this->getUser() == null) {
+            return $this->redirectToRoute('app_login');
         }
+        $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
+
+        $operations = $repo->findAllOperationsByUsers($this->getUser());
+        $encoder = new JsonEncoder();
+
+        $normalizer = new ObjectNormalizer($classMetadataFactory);
+        $serializer = new Serializer([$normalizer], [$encoder]);
+        $data = $serializer->normalize($operations, null, ['groups' => 'group1']);
+        $dataSerialized = $serializer->serialize($data, 'json');
+        $response = new Response($dataSerialized);
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
     }
+}
