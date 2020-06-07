@@ -28,12 +28,12 @@ class Category
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"group1"})
      */
     private $image;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Operations", mappedBy="category")
+     * 
      */
     private $Operation;
 

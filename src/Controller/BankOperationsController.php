@@ -47,6 +47,9 @@ class BankOperationsController extends AbstractController
      */
     public function unloggedHome()
     {
+        if ($this->getUser()) {
+            return $this->redirectToRoute('home_logged');
+        }
         return $this->render('bank_operations/unlogged_home.html.twig');
     }
 

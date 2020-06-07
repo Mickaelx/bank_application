@@ -1,10 +1,22 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-	<div class="bg-dark p-5 w-100 h-100">
-		<canvas id="myChart"></canvas>
+	<div class="bg-dark p-5 m-0 rounded">
+		<h3 class="h3 text-white">Expense & income</h3>
 
+		<canvas id="myChart"></canvas>
 	</div>
+	<div class="bg-dark p-5 mt-5 m-0 rounded">
+		<h3 class="h3 text-white">Statistics by year</h3>
+
+		<canvas id="myChart2"></canvas>
+	</div>
+
+	<div class="bg-dark p-5 mt-5 m-0 rounded">
+		<h3 class="h3 text-white">Statistics by categories</h3>
+		<canvas id="myChart3"></canvas>
+	</div>
+
 
 	<script>
 		catchData().then(response => console.log('All good, data fetched!')).catch(error => {
@@ -16,6 +28,7 @@ async function catchData() {
 const xLabelsDate = [];
 const yOperationsPlus = [];
 const yOperationsMinus = [];
+const yOperations = [];
 const yContent = [];
 const yCategory = [];
 const response = await fetch('/operationsJsonified');
@@ -24,6 +37,7 @@ console.log(data);
 
 data.forEach(operation => {
 const amount = operation.amount;
+yOperations.push(amount);
 if (operation.amount > 0) {
 const amountPlus = operation.amount
 
@@ -42,6 +56,7 @@ time = date.toDateString();
 xLabelsDate.push(time);
 
 const category = operation.category.title;
+yCategory.push(category);
 const content = operation.content;
 yContent.push(content);
 
@@ -50,6 +65,7 @@ yContent.push(content);
 return {
 yOperationsPlus,
 yOperationsMinus,
+yOperations,
 xLabelsDate,
 yCategory,
 yContent
@@ -58,6 +74,9 @@ yContent
 
 
 createChart();
+createChart2();
+createChart3();
+
 
 async function createChart() { // call en await la function qui récupère les data et attend qu'elles soient récup
 const data = await catchData();
@@ -89,6 +108,63 @@ data: data.yOperationsPlus
 
 
 options: {}
+});
+}
+
+async function createChart2() { // call en await la function qui récupère les data et attend qu'elles soient récup
+const data = await catchData();
+const ctx = document.getElementById('myChart2').getContext('2d');
+const chart = new Chart(ctx, {
+type: 'radar',
+data: {
+labels: data.yCategory,
+
+
+datasets: [
+{
+label: data.xLabelsDate,
+
+backgroundColor: 'rgba(255, 255, 0, .7)',
+data: data.yOperations
+
+}
+]
+},
+
+
+options: {}
+});
+}
+
+async function createChart3() {
+const data = await catchData();
+
+const ctx = document.getElementById("myChart3").getContext('2d');
+var myPieChart = new Chart(ctx, {
+data: {
+datasets: [
+{
+data: data.yOperationsMinus,
+backgroundColor: [
+'rgb(50, 205, 50)',
+'rgb(255, 0, 0)',
+'rgb(238,188,188)',
+'rgb(238,222,171)',
+'rgb(200,236,181)',
+'rgb(188,194,242',
+'rgb(232,182,238)'
+
+]
+
+
+}
+
+
+],
+labels: data.yCategory
+
+},
+type: 'doughnut'
 });
 }
 	</script>

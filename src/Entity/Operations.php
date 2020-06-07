@@ -20,43 +20,43 @@ class Operations
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"group1"})
-     * @var \DateTime
+     * @Groups("group1")
+     * @var string A "Y-m-d H:i:s" formatted value
      */
     private $date;
 
     /**
      * @ORM\Column(type="float")
      * @Assert\Type(type="float", message="You can only add numbers here")
-     * @Groups({"group1"})
+     * @Groups("group1")
      */
     private $amount;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\Length(min=1, max=255)
-     * @Groups({"group1"})
+     * @Groups("group1")
      */
     private $content;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="Operation")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"group1"})
+     * @Groups("group1")
      */
     private $category;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Type", inversedBy="operation")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"group1"})
+     * @Groups("group1")
      */
     private $type;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\PayementMethod", inversedBy="operation")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"group1"})
+     * @Groups("group1")
      * 
      */
     private $payementMethod;
@@ -71,18 +71,19 @@ class Operations
     {
         return $this->id;
     }
+
+
     /**
-     * Undocumented function
-     *
+     * @Groups({"group1"})
      * @return \DateTimeInterface|null
      */
     public function getDate(): ?\DateTimeInterface
     {
         return $this->date;
     }
+
     /**
-     * 
-     *
+     * @Groups({"group1"})
      * @param \DateTimeInterface $date
      * @return self
      */
