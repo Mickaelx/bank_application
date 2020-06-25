@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
 
+
 /**
  * @ORM\Entity(repositoryClass="App\Repository\OperationsRepository")
  */
@@ -19,9 +20,10 @@ class Operations
     private $id;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="date")
      * @Groups("group1")
-     * @var string A "Y-m-d H:i:s" formatted value
+     * @Assert\DateTime
+     * @var \Datetime A "Y-m-d" formatted value
      */
     private $date;
 
@@ -75,19 +77,19 @@ class Operations
 
     /**
      * @Groups({"group1"})
-     * @return \DateTimeInterface|null
+     * @return DateTime::format|null
      */
-    public function getDate(): ?\DateTimeInterface
+    public function getDate(): ?\DateTime
     {
         return $this->date;
     }
 
     /**
      * @Groups({"group1"})
-     * @param \DateTimeInterface $date
+     * @param \DateTime $date
      * @return self
      */
-    public function setDate(\DateTimeInterface $date): self
+    public function setDate(\DateTime $date): self
     {
         $this->date = $date;
 

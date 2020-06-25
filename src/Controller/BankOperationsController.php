@@ -25,7 +25,6 @@ use Symfony\Component\Form\FormTypeInterface;
 
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
@@ -297,6 +296,7 @@ class BankOperationsController extends AbstractController
         $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
 
         $operations = $repo->findAllOperationsByUsers($this->getUser());
+
         $encoder = new JsonEncoder();
 
         $normalizer = new ObjectNormalizer($classMetadataFactory);
