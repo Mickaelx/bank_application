@@ -194,7 +194,7 @@ class Operations extends \App\Entity\Operations implements \Doctrine\ORM\Proxy\P
     /**
      * {@inheritDoc}
      */
-    public function getDate(): ?\DateTimeInterface
+    public function getDate(): ?\DateTime
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getDate', []);
@@ -205,7 +205,7 @@ class Operations extends \App\Entity\Operations implements \Doctrine\ORM\Proxy\P
     /**
      * {@inheritDoc}
      */
-    public function setDate(\DateTimeInterface $date): \App\Entity\Operations
+    public function setDate(\DateTime $date): \App\Entity\Operations
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setDate', [$date]);
