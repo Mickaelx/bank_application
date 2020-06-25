@@ -1,0 +1,90 @@
+<?php //%255B3c285e96bdcd4a67fb570b2347ffda74%255D%255B1%255D
+
+return [PHP_INT_MAX, static function () { return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+    $o = [
+        clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Query\\ParserResult'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Query\\ParserResult')),
+        clone ($p['Doctrine\\ORM\\Query\\Exec\\SingleSelectExecutor'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Query\\Exec\\SingleSelectExecutor')),
+        clone ($p['Doctrine\\ORM\\Query\\ResultSetMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Query\\ResultSetMapping')),
+    ],
+    null,
+    [
+        'Doctrine\\ORM\\Query\\ParserResult' => [
+            '_sqlExecutor' => [
+                $o[1],
+            ],
+            '_resultSetMapping' => [
+                $o[2],
+            ],
+            '_parameterMappings' => [
+                [
+                    'user' => [
+                        0,
+                    ],
+                ],
+            ],
+        ],
+        'Doctrine\\ORM\\Query\\Exec\\AbstractSqlExecutor' => [
+            '_sqlStatements' => [
+                1 => 'SELECT o0_.id AS id_0, o0_.date AS date_1, o0_.amount AS amount_2, o0_.content AS content_3, o0_.category_id AS category_id_4, o0_.type_id AS type_id_5, o0_.payement_method_id AS payement_method_id_6, o0_.user_id AS user_id_7 FROM operations o0_ INNER JOIN category c1_ ON o0_.category_id = c1_.id INNER JOIN type t2_ ON o0_.type_id = t2_.id INNER JOIN user u3_ ON o0_.user_id = u3_.id WHERE o0_.user_id = ? ORDER BY o0_.date DESC',
+            ],
+        ],
+        'stdClass' => [
+            'aliasMap' => [
+                2 => [
+                    'operations' => 'App\\Entity\\Operations',
+                ],
+            ],
+            'fieldMappings' => [
+                2 => [
+                    'id_0' => 'id',
+                    'date_1' => 'date',
+                    'amount_2' => 'amount',
+                    'content_3' => 'content',
+                ],
+            ],
+            'typeMappings' => [
+                2 => [
+                    'category_id_4' => 'integer',
+                    'type_id_5' => 'integer',
+                    'payement_method_id_6' => 'integer',
+                    'user_id_7' => 'integer',
+                ],
+            ],
+            'entityMappings' => [
+                2 => [
+                    'operations' => null,
+                ],
+            ],
+            'metaMappings' => [
+                2 => [
+                    'category_id_4' => 'category_id',
+                    'type_id_5' => 'type_id',
+                    'payement_method_id_6' => 'payement_method_id',
+                    'user_id_7' => 'user_id',
+                ],
+            ],
+            'columnOwnerMap' => [
+                2 => [
+                    'id_0' => 'operations',
+                    'date_1' => 'operations',
+                    'amount_2' => 'operations',
+                    'content_3' => 'operations',
+                    'category_id_4' => 'operations',
+                    'type_id_5' => 'operations',
+                    'payement_method_id_6' => 'operations',
+                    'user_id_7' => 'operations',
+                ],
+            ],
+            'declaringClasses' => [
+                2 => [
+                    'id_0' => 'App\\Entity\\Operations',
+                    'date_1' => 'App\\Entity\\Operations',
+                    'amount_2' => 'App\\Entity\\Operations',
+                    'content_3' => 'App\\Entity\\Operations',
+                ],
+            ],
+        ],
+    ],
+    $o[0],
+    []
+); }];
